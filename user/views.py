@@ -6,12 +6,12 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import UserSerializer, UserPreferencesSerializer, UserDeactivateSerializer
-from .models import User
+from user.serializers import UserSerializer, UserPreferencesSerializer, UserDeactivateSerializer
+from user.models import User
 from preference import settings
 from rest_framework.generics import RetrieveUpdateAPIView, ListAPIView
 from rest_framework.mixins import UpdateModelMixin
-from preferences.serializers import PreferencesMapping
+from preferences.serializers import PreferencesMapping, PreferencesSerializer
 from preferences.models import Preferences
 from tag.models import Tag
 from tag.serializers import TagSerializer
@@ -35,9 +35,10 @@ class RegisterUserAPIView(APIView):
         user_logged_in.send(sender=user.__class__, request=request, user=user)
         return Response(user_details, status=status.HTTP_201_CREATED)
 
+
 @api_view(['POST'])
 @permission_classes([AllowAny, ])
-def authenticate_user(request):
+def GetToken(request):
     try:
         email = request.data['email']
         password = request.data['password']
@@ -80,22 +81,6 @@ class UserInfoView(RetrieveUpdateAPIView, UpdateModelMixin):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class UserPreferencesView(RetrieveUpdateAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = UserPreferencesSerializer
-
-    def get(self, request, *args, **kwargs):
-        serializer = self.serializer_class(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def put(self, request, *args, **kwargs):
-        serializer_data = request.data.get('username', {})
-        serializer = self.serializer_class(request.user, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 class UserDeactivate(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserDeactivateSerializer
@@ -107,6 +92,32 @@ class UserDeactivate(RetrieveUpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response("The user has been deactivated", status=status.HTTP_200_OK)
+
+
+class UserPreferencesView(RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserPreferencesSerializer
+
+    def get(self, request, *args, **kwargs):
+        preferences = set()
+        serializer_class = UserPreferencesSerializer
+        serializer = serializer_class(request.user)
+        for pref in serializer.data["preferences"]:
+            preferences.add(pref)
+        Pref = list()
+        for preference in preferences:
+            Pref.append(PreferencesSerializer(Preferences.objects.get(preference_id  = preference)).data)
+        return Response(Pref, status=status.HTTP_200_OK)
+
+        serializer = self.serializer_class(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, *args, **kwargs):
+        serializer_data = request.data.get('username', {})
+        serializer = self.serializer_class(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserArticlesView(ListAPIView):

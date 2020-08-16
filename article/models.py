@@ -5,6 +5,9 @@ class Article(models.Model):
     title = models.CharField(max_length=80, blank=True)
     article_id = models.AutoField(primary_key=True)
     publish_date = models.DateField()
-
+    
+    def __str__(self):
+        return self.title
+    
     class Meta:
         ordering = ['title']

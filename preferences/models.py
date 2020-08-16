@@ -10,8 +10,4 @@ class Preferences(models.Model):
         ordering = ['preference']
     
     def __str__(self):
-        """
-        Returns a string representation of this `User`.
-        This string is used when a `User` is printed in the console.
-        """
         return self.preference
