@@ -114,8 +114,8 @@ class UserArticlesView(ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        pref =UserPreferencesSerializer(request.user).data["preferences"]
-        preferences = Preferences.objects.filter(preference_id__in=pref)
+        preferenceset =UserPreferencesSerializer(request.user).data["preferences"]
+        preferences = Preferences.objects.filter(preference_id__in=preferenceset)
         tagset = set()
         for preference in preferences:
             tagset = set(chain(tagset,PreferencesMappingSerializer(preference).data["tags"]))
