@@ -7,7 +7,7 @@ class Preferences(models.Model):
     tags = models.ManyToManyField(Tag, related_name='preferences', blank=True)
     
     class Meta:
-        ordering = ['preference']
+        ordering = ['preference_id']
     
     def __str__(self):
         return self.preference

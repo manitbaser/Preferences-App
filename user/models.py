@@ -41,9 +41,6 @@ class User(AbstractUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
     objects = UserManager()
+    
     def __str__(self):
-        """
-        Returns a string representation of this `User`.
-        This string is used when a `User` is printed in the console.
-        """
         return self.email

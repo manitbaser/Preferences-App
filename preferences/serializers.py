@@ -5,7 +5,7 @@ class PreferencesSerializer(serializers.ModelSerializer):
         model = Preferences
         fields = ['preference','preference_id']
 
-class PreferencesMapping(serializers.ModelSerializer):
+class PreferencesMappingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Preferences
         fields = ['preference_id','tags']

@@ -101,12 +101,12 @@ WSGI_APPLICATION = 'preference.wsgi.application'
 
 DATABASES = {
     'default':{
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'postgres',
-        # 'USER': 'manitbaser',
-        # 'PASSWORD': '',
-        # 'HOST': 'localhost',
-        # 'POST': '8000',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'manitbaser',
+        'USER': 'manitbaser',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'POST': '8000',
 
     # },
     # 'original': {
