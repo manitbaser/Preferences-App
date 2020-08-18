@@ -6,11 +6,11 @@ from article.views import ArticleViewSet
 router = DefaultRouter()
 router.register(r'', views.ArticleViewSet)
 
-tag = ArticleViewSet.as_view({
-    'get': 'tag'
-})
+# tag = ArticleViewSet.as_view({
+#     'get': 'tag'
+# })
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('<int:pk>/tag/',tag)
+    # path('<int:pk>/tag/',tag)
 ]
