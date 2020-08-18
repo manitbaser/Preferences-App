@@ -6,3 +6,8 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ['tag','tag_id', 'articles']
         extra_kwargs = {'articles': {'required': False}}
+
+class TagArticleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['tag','tag_id']
