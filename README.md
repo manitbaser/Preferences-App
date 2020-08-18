@@ -27,7 +27,8 @@ path('user/'):-
     
     
 path('article/') # View all articles
-
+    
+path('article/(int)/') # View articles related to tag(int)
 
 path('preferences/') # View all preferences
 
