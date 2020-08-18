@@ -8,6 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth.decorators import user_passes_test
 from rest_framework import status
+from itertools import chain
 
 class ArticleViewSet(viewsets.ModelViewSet):
     """
@@ -19,7 +20,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         if request.user.is_superuser:
             tag = Tag.objects.filter(tag_id=pk)
-            return Response(TagSerializer(tag, many=True).data)
+            articleset = set()
+            for t in tag:
+                articleset = set(chain(articleset,TagSerializer(t).data["articles"]))
+            articles = ArticleSerializer(Article.objects.filter(article_id__in= articleset),many=True).data
+            return Response(ArticleSerializer(articles, many=True).data)
+
+
         else:
             res = {'error': 'can not authenticate with the given credentials or the account has been deactivated'}
             return Response(res, status=status.HTTP_403_FORBIDDEN)
