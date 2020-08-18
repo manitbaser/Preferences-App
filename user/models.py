@@ -7,6 +7,9 @@ from preferences.models import Preferences
 
 class UserManager(UserManager):
     def create_user(self, username, email, password=None):
+        """
+        Creates and saves a User with the given email, username and password.
+        """
         if username is None:
             raise TypeError('Users must have a username.')
 
@@ -27,6 +30,10 @@ class UserManager(UserManager):
         return user
 
 class User(AbstractUser, PermissionsMixin):
+    """
+    A class implementing a fully featured User model with
+    admin-compliant permissions.
+    """
     username = models.CharField(db_index=True, max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)

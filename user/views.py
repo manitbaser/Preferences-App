@@ -17,8 +17,12 @@ from tag.models import Tag
 from tag.serializers import TagSerializer
 from article.models import Article
 from article.serializers import ArticleSerializer
+from itertools import chain
 
 class RegisterUserView(APIView):
+    """
+    Creates a new user with the given username, email, password, first_name and last_name.
+    """
     permission_classes = (AllowAny,)
     
     def post(self, request):
@@ -37,8 +41,11 @@ class RegisterUserView(APIView):
 
 
 class GetTokenView(APIView):
+    """
+    Generates new token for the user using given email and password.
+    """
     permission_classes = (AllowAny,)
-    
+
     def post(self, request):
         try:
             user = request.data
@@ -65,6 +72,9 @@ class GetTokenView(APIView):
             return Response(res)
 
 class UserInfoView(RetrieveUpdateAPIView, UpdateModelMixin):
+    """
+    Returns/Updates user's information using given JWT token.
+    """
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
@@ -81,6 +91,9 @@ class UserInfoView(RetrieveUpdateAPIView, UpdateModelMixin):
 
 
 class UserDeactivateView(RetrieveUpdateAPIView):
+    """
+    Deactivates user using given JWT token.
+    """
     permission_classes = (IsAuthenticated,)
     serializer_class = UserDeactivateSerializer
 
@@ -95,6 +108,9 @@ class UserDeactivateView(RetrieveUpdateAPIView):
 
 
 class UserPreferencesView(RetrieveUpdateAPIView):
+    """
+    Returns/Updates user's preferences using given JWT token.
+    """
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
@@ -109,8 +125,11 @@ class UserPreferencesView(RetrieveUpdateAPIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-from itertools import chain
+
 class UserArticlesView(ListAPIView):
+    """
+    Returns article suggestions based on user's preferences using given JWT token.
+    """
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
